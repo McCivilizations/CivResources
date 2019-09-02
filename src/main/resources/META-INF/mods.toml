@@ -1,0 +1,12 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/MCCivilizations/Civ_Resources/issues"
+
+[[mods]]
+    modId="civ_resources"
+    version="${file.jarVersion}"
+    displayName="MCCivilizations: Resources"
+    authors="DivineAspect, SkySom"
+    description='''
+        Adds the ability to tie abstract resources to a team.
+    '''
