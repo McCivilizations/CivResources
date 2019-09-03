@@ -28,7 +28,7 @@ public class ResourceJsonProvider implements IJsonProvider<Resource> {
         return () -> {
             String rlToString = resourceLocation.getNamespace() + "." +
                     resourceLocation.getPath().replace("/", ".");
-            return new TranslationTextComponent("civ_resources.resource." + rlToString);
+            return new TranslationTextComponent("mccivilizations.resources." + rlToString);
         };
     }
 }

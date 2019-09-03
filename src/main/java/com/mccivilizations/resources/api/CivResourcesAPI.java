@@ -1,8 +1,8 @@
 package com.mccivilizations.resources.api;
 
 import com.google.common.collect.Maps;
+import com.mccivilizations.resources.api.resource.IResourceStorage;
 import com.mccivilizations.resources.api.resource.Resource;
-import com.mccivilizations.resources.api.storage.IResourceStorage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;

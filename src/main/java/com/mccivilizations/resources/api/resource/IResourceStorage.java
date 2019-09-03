@@ -1,6 +1,5 @@
-package com.mccivilizations.resources.api.storage;
+package com.mccivilizations.resources.api.resource;
 
-import com.mccivilizations.resources.api.resource.Resource;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.scoreboard.Team;

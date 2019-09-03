@@ -1,8 +1,9 @@
-package com.mccivilizations.resources.api.storage;
+package com.mccivilizations.resources.capability;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mccivilizations.resources.api.CivResourcesAPI;
+import com.mccivilizations.resources.api.resource.IResourceStorage;
 import com.mccivilizations.resources.api.resource.Resource;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -22,7 +23,7 @@ public class ResourceStorage implements IResourceStorage {
             long currentAmount = this.getAmount(name, resource);
 
             if (currentAmount < resource.getMaxAmount()) {
-                amountAdded = Math.min(amount, resource.getMaxAmount() - currentAmount);
+                amountAdded = Math.min(amount, resource.gettMaxAmount() - currentAmount);
                 if (commit) {
                     resources.put(name, resource, currentAmount + amountAdded);
                 }
@@ -51,11 +52,12 @@ public class ResourceStorage implements IResourceStorage {
 
     @Override
     public void empty(String name, Resource resource) {
-        resources.remove(name, resource);
+        resources.put(name, resource, 0L);
     }
 
     @Override
     public long getAmount(String name, Resource resource) {
+        ensureExists(name, resource);
         return resources.get(name, resource);
     }
 
@@ -85,6 +87,12 @@ public class ResourceStorage implements IResourceStorage {
             for (Resource resource: CivResourcesAPI.resources.values()) {
                 resources.put(teamName, resource, teamInfo.getLong(resource.getRegistryName().toString()));
             }
+        }
+    }
+
+    private void ensureExists(String name, Resource resource) {
+        if (!resources.contains(name, resource)) {
+            resources.put(name, resource, 0L);
         }
     }
 }
