@@ -50,9 +50,6 @@ minecraft {
 }
 
 dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit_version}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit_version}"
-
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 }
 
