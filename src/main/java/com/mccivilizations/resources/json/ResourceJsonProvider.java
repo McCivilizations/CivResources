@@ -16,8 +16,8 @@ public class ResourceJsonProvider implements IJsonProvider<Resource> {
     public Resource provide(ResourceLocation resourceLocation, JsonObject jsonObject) throws JsonParseException {
         return new Resource(
                 resourceLocation,
-                JSONUtils.func_219796_a(jsonObject, "max", 0),
-                JSONUtils.func_219796_a(jsonObject, "min", Long.MAX_VALUE),
+                JSONUtils.func_219796_a(jsonObject, "min", 0),
+                JSONUtils.func_219796_a(jsonObject, "max", Long.MAX_VALUE),
                 Optional.ofNullable(jsonObject.get("name"))
                     .map(ITextComponent.Serializer::fromJson)
                     .orElseGet(provideTranslation(resourceLocation))

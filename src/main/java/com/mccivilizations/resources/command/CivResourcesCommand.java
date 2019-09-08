@@ -29,7 +29,7 @@ import java.util.function.Function;
 
 public class CivResourcesCommand {
     public static LiteralArgumentBuilder<CommandSource> create() {
-        return LiteralArgumentBuilder.<CommandSource>literal("civilization")
+        return LiteralArgumentBuilder.<CommandSource>literal("mccivilizations")
                 .then(Commands.literal("resources")
                         .then(team())
                         .then(entity())
@@ -46,8 +46,10 @@ public class CivResourcesCommand {
                                                 .executes(CivResourcesCommand.handleAlter(context -> EntityArgument.getEntities(context, "entity"),
                                                         (context, entities, resource, amount) -> {
                                                             IResourceStorage storage = get(context);
-                                                            entities.forEach(entity -> storage.add(entity, resource, amount, true));
-                                                        })
+                                                            return entities.stream()
+                                                                    .map(entity -> storage.add(entity, resource, amount, true))
+                                                                    .reduce(0L, Long::sum);
+                                                        }, "added")
                                                 )
                                         )
                                 )
@@ -56,8 +58,10 @@ public class CivResourcesCommand {
                                                 .executes(CivResourcesCommand.handleAlter(context -> EntityArgument.getEntities(context, "entity"),
                                                         (context, entities, resource, amount) -> {
                                                             IResourceStorage storage = get(context);
-                                                            entities.forEach(entity -> storage.add(entity, resource, amount, true));
-                                                        })
+                                                            return entities.stream()
+                                                                    .map(entity -> storage.remove(entity, resource, amount, true))
+                                                                    .reduce(0L, Long::sum);
+                                                        }, "removed")
                                                 )
                                         )
                                 )
@@ -75,13 +79,13 @@ public class CivResourcesCommand {
                                 .then(Commands.literal("add")
                                         .then(Commands.argument("amount", LongArgumentType.longArg(1))
                                                 .executes(CivResourcesCommand.handleAlter(context -> TeamArgument.getTeam(context, "team"),
-                                                        (context, team, resource, amount) -> get(context).add(team, resource, amount, true)))
+                                                        (context, team, resource, amount) -> get(context).add(team, resource, amount, true), "added"))
                                         )
                                 )
                                 .then(Commands.literal("remove")
                                         .then(Commands.argument("amount", LongArgumentType.longArg(1))
                                                 .executes(CivResourcesCommand.handleAlter(context -> TeamArgument.getTeam(context, "team"),
-                                                        (context, team, resource, amount) -> get(context).remove(team, resource, amount, true)))
+                                                        (context, team, resource, amount) -> get(context).remove(team, resource, amount, true), "removed"))
                                         )
                                 )
                         ).executes(CivResourcesCommand.listResourcesFor(context -> Lists.newArrayList(TeamArgument.getTeam(context, "team")),
@@ -91,14 +95,19 @@ public class CivResourcesCommand {
     }
 
     private static <T> Command<CommandSource> handleAlter(ThrowingFunction<CommandContext<CommandSource>, T, CommandSyntaxException> grabTarget,
-                                                          ResourceAlterer<T> handleChange) {
+                                                          ResourceAlterer<T> handleChange, String text) {
         return context -> {
             Resource resource = context.getArgument("resource", Resource.class);
             T target = grabTarget.apply(context);
             long amount = LongArgumentType.getLong(context, "amount");
-            handleChange.alter(context, target, resource, amount);
+            long amountAltered = handleChange.alter(context, target, resource, amount);
+            message(context).accept(createTranslation(text, amountAltered));
             return 1;
         };
+    }
+
+    private static ITextComponent createTranslation(String additionalText, Object... inputs) {
+        return new TranslationTextComponent("mccivilizations.resource.command." + additionalText, inputs);
     }
 
     private static <T> Command<CommandSource> listResourcesFor(ThrowingFunction<CommandContext<CommandSource>, Collection<T>, CommandSyntaxException> grabTarget,
@@ -106,10 +115,9 @@ public class CivResourcesCommand {
         return context -> {
             IResourceStorage storage = get(context);
             Collection<T> targets = grabTarget.apply(context);
-            for (T target: targets) {
+            for (T target : targets) {
                 String targetName = name.apply(target);
-                context.getSource().sendFeedback(new TranslationTextComponent(
-                        "mccivilizations.resource.command.resources_for", targetName), false);
+                context.getSource().sendFeedback(createTranslation("resources_for", targetName), false);
                 storage.getResourcesFor(targetName).entrySet()
                         .stream()
                         .map(entry -> entry.getKey().getName().appendSibling(
@@ -137,10 +145,10 @@ public class CivResourcesCommand {
                 .getServer()
                 .getWorld(DimensionType.OVERWORLD)
                 .getCapability(CivResourcesAPI.RESOURCE_STORAGE_CAPABILITY)
-                .orElseThrow(() -> new CommandException(new TranslationTextComponent("civilization.resources.command.missing_resource_storage")));
+                .orElseThrow(() -> new CommandException(createTranslation("missing_resource_storage")));
     }
 
     private interface ResourceAlterer<T> {
-        void alter(CommandContext<CommandSource> context, T target, Resource resource, Long amount);
+        long alter(CommandContext<CommandSource> context, T target, Resource resource, Long amount);
     }
 }

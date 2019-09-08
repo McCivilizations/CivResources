@@ -23,7 +23,7 @@ public class ResourceStorage implements IResourceStorage {
             long currentAmount = this.getAmount(name, resource);
 
             if (currentAmount < resource.getMaxAmount()) {
-                amountAdded = Math.min(amount, resource.gettMaxAmount() - currentAmount);
+                amountAdded = Math.min(amount, resource.getMaxAmount() - currentAmount);
                 if (commit) {
                     resources.put(name, resource, currentAmount + amountAdded);
                 }
