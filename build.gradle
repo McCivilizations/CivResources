@@ -19,6 +19,7 @@ apply plugin: "idea"
 
 version = "${minecraft_version}-" + getVersion()
 group = "${group}"
+archivesBaseName = "${mod_name}"
 
 repositories {
     mavenLocal()
