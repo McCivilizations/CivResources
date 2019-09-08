@@ -1,0 +1,7 @@
+{
+  "mccivilizations.resources.command.missing_resource_storage": "Unable to Find Resource Storage",
+  "mccivilizations.resources.command.added": "Added %d %s of %s",
+  "mccivilizations.resources.command.removed": "Removed %d %s of %s",
+  "mccivilizations.resources.command.resources_for": "%d %s of %s for %s",
+  "mccivilizations.resources.bundles": "Bundles"
+}

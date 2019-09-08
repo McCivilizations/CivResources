@@ -101,13 +101,13 @@ public class CivResourcesCommand {
             T target = grabTarget.apply(context);
             long amount = LongArgumentType.getLong(context, "amount");
             long amountAltered = handleChange.alter(context, target, resource, amount);
-            message(context).accept(createTranslation(text, amountAltered));
+            message(context).accept(createTranslation(text, amountAltered, resource.getGroup(), resource.getName()));
             return 1;
         };
     }
 
     private static ITextComponent createTranslation(String additionalText, Object... inputs) {
-        return new TranslationTextComponent("mccivilizations.resource.command." + additionalText, inputs);
+        return new TranslationTextComponent("mccivilizations.resources.command." + additionalText, inputs);
     }
 
     private static <T> Command<CommandSource> listResourcesFor(ThrowingFunction<CommandContext<CommandSource>, Collection<T>, CommandSyntaxException> grabTarget,
