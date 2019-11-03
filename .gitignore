@@ -1,4 +1,6 @@
 /.gradle
 
+#Forge
 /run
 /build
+!run/the_loader/

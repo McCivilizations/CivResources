@@ -28,6 +28,10 @@ repositories {
         name = "forge"
         url = "http://files.minecraftforge.net/maven"
     }
+    maven {
+        name = "The Loader"
+        url = "https://maven.blamejared.com"
+    }
 }
 
 test {
@@ -52,6 +56,7 @@ minecraft {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    compile fg.deobf('com.teamacronymcoders:theloader:1.14.4-1.0.0-SNAPSHOT.3')
 }
 
 task srcJar(type: Jar) {
